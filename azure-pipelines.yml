@@ -9,7 +9,7 @@ pool:
   vmImage: 'ubuntu-latest'  # Use the 'Ubuntu-latest' agent pool
 
 variables:
-  pythonVersion: '3.9'  # Define Python version
+  pythonVersion: '3.13'  # Define Python version
 
 steps:
 - task: UsePythonVersion@0
