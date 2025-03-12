@@ -6,7 +6,7 @@ trigger:
       - master  # Trigger pipeline on changes to the master branch
 
 pool:
-  name: 'Self-Hosted'  # Use the self-hosted agent pool
+  vmImage: 'ubuntu-latest'  # Use the self-hosted agent pool
 
 variables:
   pythonVersion: '3.9'  # Define Python version
