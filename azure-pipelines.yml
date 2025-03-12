@@ -1,0 +1,45 @@
+# azure-pipelines.yml
+
+trigger:
+  branches:
+    include:
+      - master  # Trigger pipeline on changes to the master branch
+
+pool:
+  vmImage: 'windows-latest'  # Use the latest windows agent
+
+variables:
+  pythonVersion: '3.9'  # Define Python version
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '$(pythonVersion)'
+    addToPath: true
+
+- script: |
+    python -m pip install --upgrade pip
+    pip install -r requirements.txt
+  displayName: 'Install dependencies'
+
+- script: |
+    python -m pytest AjayFolder/test_Login_Test_Cases.py --junitxml=test-results.xml --html=test-report.html
+  displayName: 'Run tests'
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: '**/test-results.xml'
+    failTaskOnFailedTests: true
+  condition: succeededOrFailed()  # Publish results even if tests fail
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.SourcesDirectory)'  # Publish the entire workspace
+    ArtifactName: 'TestReport'
+    publishLocation: 'Container'
+  displayName: 'Publish HTML report as build artifact'
+
+- script: |
+    echo "Build and test completed successfully!"
+  displayName: 'Completion message'
